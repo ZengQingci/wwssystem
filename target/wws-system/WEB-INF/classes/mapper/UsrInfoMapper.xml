@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wws.dao.UserInfoDao">
+    <sql id="whereName">
+        <where>
+            <if test="userName!=null and userName!=''">
+                userName like concat("%",#{userName},"%")
+            </if>
+        </where>
+    </sql>
+    <select id="findAll" resultType="com.wws.model.UserInfo">
+        select * from tb_userinfo
+        <include refid="whereName"/>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="getRowCount" resultType="int">
+        select count(*) from tb_userinfo
+        <include refid="whereName"/>
+    </select>
+    <delete id="delUserById">
+        delete from tb_userinfo where id = #{id}
+    </delete>
+    <update id="updatestateById">
+        update tb_userinfo set state=#{state} where id=#{id}
+    </update>
+    <delete id="delUserByIds">
+        delete from tb_userinfo
+        <where>
+            <if test="ids==null or ids.length==0">
+                id is null
+            </if>
+            <if test="ids!=null and ids.length>0">
+                id in
+                <foreach collection="ids" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+    <insert id="saveuserinfo">
+        insert into
+        tb_userinfo(`userName`,`passWord`,`email`,`phone`,`province`,`area`,`city`,`address`,`pic`,`sex`,`state`)
+        values(#{userName},#{passWord},#{email},#{phone},#{province},#{area},#{city},#{address},#{pic},#{sex},#{state})
+    </insert>
+    <select id="findUserById" resultType="com.wws.model.UserInfo">
+        select * from tb_userinfo where id=#{id}
+    </select>
+    <update id="updateUserInfo">
+        update tb_userinfo set
+        userName=#{userName},email=#{email},phone=#{phone},province=#{province},area=#{area},city=#{city},address=#{address},pic=#{pic},sex=#{sex},state=#{state}
+        where id=#{id}
+    </update>
+    <select id="findUserByName" resultType="com.wws.model.UserInfo">
+        select * from tb_userinfo where userName=#{username} and passWord=#{password}
+    </select>
+</mapper>

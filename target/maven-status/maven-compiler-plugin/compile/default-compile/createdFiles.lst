@@ -1,0 +1,6 @@
+com\wws\dao\UserInfoDao.class
+com\wws\service\UserInfoService.class
+com\wws\controller\UserInfoController.class
+com\wws\model\UserInfo.class
+com\wws\service\impl\UserInfoServiceImpl.class
+com\wws\controller\WsTestController.class

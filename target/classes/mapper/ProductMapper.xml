@@ -1,0 +1,11 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wws.dao.ProductDao">
+    <select id="getRowCount" resultType="int">
+        select count(1) from tb_product_info
+    </select>
+    <select id="findProduct" resultType="com.wws.model.TbProductInfo">
+        select * from tb_product_info
+        limit #{startIndex},#{pageSize}
+    </select>
+</mapper>

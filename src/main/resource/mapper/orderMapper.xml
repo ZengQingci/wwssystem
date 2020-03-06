@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wws.dao.OrderDao">
+    <select id="findOrderList" resultType="com.wws.model.Tborder">
+        select * from tb_order limit #{startIndex},#{pageSize}
+    </select>
+    <select id="getRowCount" resultType="int">
+        select count(*) from tb_order
+    </select>
+    <delete id="delOrderById">
+        delete from tb_order where id=#{id}
+    </delete>
+    <delete id="delOrders">
+        delete from tb_order
+        <where>
+            <if test="ids == null or ids.length == 0">
+                id is null
+            </if>
+            id in
+            <if test="ids != null and ids.length > 0">
+                <foreach collection="ids"
+                         open="("
+                         close=")"
+                         separator=","
+                         item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+    <select id="findOrderIdByNumber" resultType="int">
+        select id from tb_order where orderNumber=#{orderNumber}
+    </select>
+    <select id="findOrderByOrderNumber" resultType="com.wws.model.Tborder">
+        select * from tb_order where orderNumber=#{orderNumber}
+    </select>
+    <insert id="saveOrder"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into tb_order(`orderNumber`,`orderStatus`,`productCount`,`address`,`orderConsignee`,`phone`,`customerId`,
+        `productAmountTotal`,`orderAmountTotal`)
+        values(#{orderNumber},#{orderStatus},#{productCount},#{address},#{orderConsignee},#{phone},#{customerId},
+        #{productAmountTotal},#{orderAmountTotal})
+    </insert>
+    <update id="updateOrder">
+        update tb_order set
+        productAmountTotal=#{productAmountTotal},orderAmountTotal=#{orderAmountTotal},productCount=#{productCount}
+        where id=#{id}
+    </update>
+    <!--查询年销售统计信息-->
+    <select id="findYearData" resultType="map">
+        select year(newDate) as years,sum(orderAmountTotal) as price from tb_order
+        where orderStatus in('已付款','已签收','已发货')
+        group by year(newDate)
+        order by years
+    </select>
+
+    <!--查询月销售统计信息-->
+    <select id="findMonthData" resultType="map">
+        select month(newDate) as months,sum(orderAmountTotal) as price from tb_order
+        where orderStatus in('已付款','已签收','已发货')
+        and date_format(newDate,'%y')=date_format(curdate(),'%y')
+        group by month(newDate)
+        order by months
+    </select>
+
+    <!--查询季度销售统计信息-->
+    <select id="findSeasonData" resultType="map">
+        select quarter(newDate) as seasons,sum(orderAmountTotal) as price from tb_order
+        where orderStatus in('已付款','已签收','已发货')
+        and date_format(newDate,'%y')=date_format(curdate(),'%y')
+        group by quarter(newDate)
+        order by seasons;
+    </select>
+</mapper>

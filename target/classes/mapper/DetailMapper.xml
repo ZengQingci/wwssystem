@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wws.dao.DetailDao">
+    <sql id="whereId">
+        <where>
+            <if test="orderId == null">
+                1=2
+            </if>
+            <if test="orderId != null">
+                orderId=#{orderId}
+            </if>
+        </where>
+    </sql>
+    <select id="findDetail" resultType="com.wws.model.TbOrderDetail">
+        select * from tb_order_detail
+        <include refid="whereId"/>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="getRowCount" resultType="int">
+        select count(1) from tb_order_detail
+        <include refid="whereId"/>
+    </select>
+    <insert id="saveOrderDetail">
+        insert into tb_order_detail (`productId`,`orderId`,`producName`,`productPrice`,`discountRate`,`orderDetailNumber`,`subtotal`,`productMarque`)
+		values(#{productId},#{orderId},#{producName},#{productPrice},#{discountRate},#{orderDetailNumber},#{subtotal},#{productMarque})
+    </insert>
+    <select id="findDetailByOrderAndPid" resultType="com.wws.model.TbOrderDetail">
+        select * from tb_order_detail where orderId=#{orderId} and productId=#{productId}
+    </select>
+    <update id="updateOrderDetail">
+        update tb_order_detail set subtotal=#{subtotal},orderDetailNumber=#{orderDetailNumber}
+        where id=#{id}
+    </update>
+    <select id="findOrderId" resultType="int">
+        select orderId from tb_order_detail where id=#{id}
+    </select>
+    <select id="findOrderCount" resultType="int">
+        select count(1) from tb_order_detail where orderId=#{orderId}
+    </select>
+    <delete id="delDetailById">
+        delete from tb_order_detail where id=#{id}
+    </delete>
+</mapper>

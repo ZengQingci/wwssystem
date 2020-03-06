@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wws.dao.AddressDao">
+    <select id="findProvince" resultType="com.wws.model.Tbprovince">
+        select * from tb_province
+    </select>
+    <select id="findCity" resultType="com.wws.model.Tbcity">
+        select * from tb_city where provincecode=#{provincecode}
+    </select>
+    <select id="findArea" resultType="com.wws.model.Tbarea">
+        select * from tb_area where citycode=#{citycode}
+    </select>
+</mapper>
